@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "pb";
+package net;
+
+// BroadcastNetworkMessage represents a network message used by broadcast channels.
+message BroadcastNetworkMessage {
+    bytes sender = 1;           // the pubkey of the sender
+    bytes payload = 2;          // a marshalled protocol message
+    bytes type = 3;             // type of the message as registered by the protocol
+    uint64 sequenceNumber = 4;  // sequnce number of the message, retransmission message has the same sequence number as original message
+}
+
+// UnicastNetworkMessage represents a network message used by unicast channels.
+message UnicastNetworkMessage {
+    bytes sender = 1;           // the pubkey of the sender;
+    bytes payload = 2;          // a mashalled protocol message
+    bytes type = 3;             // type of the message as registered by the protocol
+    bytes signature = 4;        // message signature 
+}
+
+message Identity {
+    bytes pubkey = 1;            
+}

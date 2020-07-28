@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option go_package = "pb";
+package net;
+
+// HandshakeEnvelop contains a mashalled protocol message, as well as a signature
+// over the contents of the message(to ensure an advansary hasn't tempared with the content)
+message HandshakeEnvelop {
+    bytes message = 1;      // the mashalled message
+    bytes signature = 2;    // signature of the message
+    bytes peerID = 3;       // peer ID of the message creator
+}
+
+// Act1Message is send in the first handshake act by the initator to the responder.
+// it contains a randomly generated `nonce1`, an 8-bytes(64-bits) unsigned integer.
+// and the protocol identify.
+message Act1Message {
+    bytes nonce = 1;        // randomly generated nonce by initator, 8-bytes
+    string protocol = 2;    // the identify of the protocol the initator is executing
+}
+
+// Act2Message is send in the second handshake act by the responder to the initator.
+// it contains a randomly generated `nonce2`, an 8 bytes unsigned integer,
+// and `challenge` which is a result of sha256 on the concanated bytes of 
+// `nonce1` and `nonce2`, and the protocol identify
+message Act2Message {
+    bytes nonce = 1;        // nonce from responder, 8-bytes
+    bytes challenge = 2;    // result of sha256(nonce1||nonce2)
+    string protocol = 3;    // the identify of the protocol the responder is executing
+}
+
+// Act3Message is send in the 3rd handshake act by the initator to the responder.
+// it contains the result of sha256 on the concanated bytes of `nonce1` and `nonce2`.
+message Act3Message {
+    bytes challenge = 1;
+}
