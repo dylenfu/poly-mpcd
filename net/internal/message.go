@@ -4,8 +4,8 @@ import (
 	"github.com/polynetwork/mpcd/net"
 )
 
-// BaseMessage instance an basic message
-func BaseMessage(
+// BasicMessage instance an basic message
+func BasicMessage(
 	transportSenderID net.TransportIdentifier,
 	senderPublicKey []byte,
 	payload interface{},
@@ -21,7 +21,7 @@ func BaseMessage(
 	}
 }
 
-// baseMessage is a struct-based trival implementation for net.Message,
+// basicMessage is a struct-based trival implementation for net.Message,
 // interface for use by packages that don't need any frills
 type basicMessage struct {
 	transportSenderID net.TransportIdentifier

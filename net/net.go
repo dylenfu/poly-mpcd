@@ -3,6 +3,7 @@ package net
 import (
 	"crypto/ecdsa"
 
+	"github.com/gogo/protobuf/proto"
 	"github.com/polynetwork/mpcd/net/key"
 )
 
@@ -21,6 +22,25 @@ type Message interface {
 
 	Type() string
 	Seqno() uint64
+}
+
+// TaggedMarshaler is an interface that includes proto's marshaler.
+// but also provides a string type for the marshalable object.
+type TaggedMarshaler interface {
+	proto.Marshaler
+	Type() string
+}
+
+// TaggedUnmarshaler is an interface that includes the proto.Unmarshaler
+// interface, but also provides a string type for the unmarshalable object. The
+// Type() method is expected to be invokable on a just-initialized instance of
+// the unmarshaler (i.e., before unmarshaling is completed).
+type TaggedUnmarshaler interface {
+	proto.Unmarshaler
+	Type() string
+}
+
+type Provider interface {
 }
 
 // ConnectionManager is an interface which exposes peers a client is connected to,
