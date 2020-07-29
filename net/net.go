@@ -1,6 +1,7 @@
 package net
 
 import (
+	"context"
 	"crypto/ecdsa"
 
 	"github.com/gogo/protobuf/proto"
@@ -54,6 +55,48 @@ type ConnectionManager interface {
 	AddrStrings() []string
 	IsConnected(address string) bool
 }
+
+// BroadcastChannel represents a named pubsub channel. it allows group members
+// to broadcast and receive messages. BroadcastChannel implements strategy
+// for the retransmission of broadcast messages and handle dumplicates before
+// passing the received message to the client
+type BroadcastChannel interface {
+	// Name returns the name of this broadcast channel.
+	Name() string
+
+	// Send function publishes a message m to the channel. message m needs to
+	// conform to the marshalling interface. Message will be periodically
+	// retransmitted by the channel for the lifetime of the provided context.
+	Send(ctx context.Context, m TaggedMarshaler) error
+
+	// Recv installs a message handler that will receives messages from the
+	// channel for the entire lifetime of the provided context.
+	// when the context is done, handler is automatically unregistered and
+	// receives no more messages. Already received message retransmissions are
+	// filtered out before calling the handler
+	Recv(ctx context.Context, handler func(m Message))
+
+	// RegisterUnmarshaler registers an unmarshaler that will unmarshal a given
+	// type to a concrete object that can be passed to and understood by any
+	// registered message handling functions. the unmarshaler should be a
+	// function that returns a fresh object of type proto.TaggedUnmarshaler,
+	// ready to read in the bytes for an object marked as tpe.
+	//
+	// the string type associated with unmarshaler is the result of calling
+	// Type() on a raw unmarshaler
+	RegisterUnmashaler(unmarshaler func() TaggedMarshaler) error
+
+	// SetFilter registers a broadcast channel filter which will be used
+	// to determine if given broadcast channel message should be processed
+	// by the receivers
+	SetFilter(filter BroadcastChannelFilter) error
+}
+
+// BroadcastChannelFilter represents a filter which determine if the incoming
+// message should be processed by the receivers. it takes the message author's
+// public key as its argument and returns true if the message should be
+// processed of false otherwise
+type BroadcastChannelFilter func(*ecdsa.PublicKey) bool
 
 // Firewall represents a set of rules that remote peer has to conform so that
 // a connect with that peer can be approved

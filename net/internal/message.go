@@ -7,9 +7,9 @@ import (
 // BasicMessage instance an basic message
 func BasicMessage(
 	transportSenderID net.TransportIdentifier,
-	senderPublicKey []byte,
 	payload interface{},
 	messageType string,
+	senderPublicKey []byte,
 	seqno uint64,
 ) net.Message {
 	return &basicMessage{
