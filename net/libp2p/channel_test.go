@@ -13,11 +13,11 @@ import (
 	"time"
 
 	"github.com/btcsuite/btcd/btcec"
-	"github.com/polynetwork/mpcd/net"
 	crypto "github.com/libp2p/go-libp2p-core/crypto"
 	peer "github.com/libp2p/go-libp2p-core/peer"
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	pubsubpb "github.com/libp2p/go-libp2p-pubsub/pb"
+	"github.com/polynetwork/mpcd/net"
 )
 
 func TestRegisterAndFireHandler(t *testing.T) {
