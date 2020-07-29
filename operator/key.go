@@ -1,11 +1,11 @@
 package operator
 
 import (
-	"fmt"
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"github.com/ethereum/go-ethereum/crypto"
+	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 // PrivateKey represents peer's static key associated with an on-chain stake.
@@ -36,7 +36,7 @@ func EthereumKeyToOperatorKey(ethereumKey *keystore.Key) (*PrivateKey, *PublicKe
 	return (*PrivateKey)(privKey), (*PublicKey)(&privKey.PublicKey)
 }
 
-// Marshal take an operator's public key and produces uncompressed public key 
+// Marshal take an operator's public key and produces uncompressed public key
 // as a slice of bytes
 func Marshal(publickKey *PublicKey) []byte {
 	return elliptic.Marshal(publickKey.Curve, publickKey.X, publickKey.Y)

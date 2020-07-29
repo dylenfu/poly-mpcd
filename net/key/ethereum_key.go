@@ -5,8 +5,8 @@ import (
 	"crypto/elliptic"
 
 	"github.com/btcsuite/btcd/btcec"
-	"github.com/polynetwork/mpcd/operator"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/polynetwork/mpcd/operator"
 
 	libp2pcrypto "github.com/libp2p/go-libp2p-core/crypto"
 )
@@ -33,10 +33,9 @@ func GenerateStaticNetworkKey() (*NetworkPrivate, *NetworkPublic, error) {
 	return networkPrivateKey, networkPublicKey, nil
 }
 
-
-// OperatorKeyToNetworkKey transform the operator key into the format supported by 
-// the network layer. Because all curve parameters of secp256k1 curve defined by 
-// `go-ethereum` and all curve parameters of secp256k1 curve defined by `btcsuite` used 
+// OperatorKeyToNetworkKey transform the operator key into the format supported by
+// the network layer. Because all curve parameters of secp256k1 curve defined by
+// `go-ethereum` and all curve parameters of secp256k1 curve defined by `btcsuite` used
 // by `libp2p` under the hood are identical, we can simply rewrite the private key
 //
 // `libp2p` do not recognize `go-ethereum` curves and when it comes to create peer's ID
@@ -45,7 +44,7 @@ func GenerateStaticNetworkKey() (*NetworkPrivate, *NetworkPublic, error) {
 func OperatorKeyToNetworkKey(
 	operatorPrivateKey *operator.PrivateKey,
 	operatorPublicKey *operator.PublicKey,
-)(*NetworkPrivate, *NetworkPublic) {
+) (*NetworkPrivate, *NetworkPublic) {
 	privKey, pubKey := btcec.PrivKeyFromBytes(btcec.S256(), operatorPrivateKey.D.Bytes())
 	return (*NetworkPrivate)(privKey), (*NetworkPublic)(pubKey)
 }
@@ -58,7 +57,7 @@ func NetworkPubKeyToEthAddress(publicKey *NetworkPublic) string {
 }
 
 // Marshal takes a network public key, converts into an ecdsa public key.
-// and use go's standard library elliptic marshal method to convert the 
+// and use go's standard library elliptic marshal method to convert the
 // public key into a slice of bytes in the correct format of the key type.
 // this allows external consumers of this key to verify integrity of the key
 // without to having understand the internals of the net pkg.
