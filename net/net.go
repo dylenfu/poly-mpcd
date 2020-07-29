@@ -78,11 +78,12 @@ type Provider interface {
 // and their identities, so that a client may forcibly disconnect from any given connected peer.
 type ConnectionManager interface {
 	ConnectedPeers() []string
-	GetPublicKey(connectedPeer string) (*key.NetworkPublic, error)
+	GetPeerPublicKey(connectedPeer string) (*key.NetworkPublic, error)
 	DisconnectPeer(connectedPeer string)
 
 	// AddrStrings returns all listen addresses of the provider.
 	AddrStrings() []string
+
 	IsConnected(address string) bool
 }
 
@@ -114,7 +115,7 @@ type BroadcastChannel interface {
 	//
 	// the string type associated with unmarshaler is the result of calling
 	// Type() on a raw unmarshaler
-	RegisterUnmashaler(unmarshaler func() TaggedMarshaler) error
+	RegisterUnmarshaler(unmarshaler func() TaggedUnmarshaler) error
 
 	// SetFilter registers a broadcast channel filter which will be used
 	// to determine if given broadcast channel message should be processed
