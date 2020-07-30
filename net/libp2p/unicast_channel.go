@@ -84,6 +84,7 @@ func (uc *unicastChannel) Send(message net.TaggedMarshaler) error {
 }
 
 func (uc *unicastChannel) send(stream network.Stream, message proto.Message) error {
+
 	writer := bufio.NewWriter(stream)
 	protoWriter := protoio.NewDelimitedWriter(writer)
 

@@ -103,7 +103,6 @@ func (b *networkBridge) initializeChannels(
 	if err != nil {
 		return fmt.Errorf("failed to get broadcast channel: [%v]", err)
 	}
-
 	broadcastChannel.Recv(ctx, handleFn)
 
 	// Initialize unicast channels
@@ -197,27 +196,6 @@ func (b *networkBridge) getBroadcastChannel() (net.BroadcastChannel, error) {
 	return broadcastChannel, nil
 }
 
-func createMemberIDFilter(
-	members []MemberID,
-) net.BroadcastChannelFilter {
-
-	authorizations := make(map[string]bool, len(members))
-	for _, member := range members {
-		authorizations[member.String()] = true
-	}
-
-	return func(authorPublicKey *ecdsa.PublicKey) bool {
-		author := MemberIDFromPublicKey(authorPublicKey)
-		_, isAuthorized := authorizations[author.String()]
-
-		if !isAuthorized {
-			logger.Warningf("rejecting message from [%v]; author is not authorized", author)
-		}
-
-		return isAuthorized
-	}
-}
-
 func (b *networkBridge) getUnicastChannelWith(
 	peerTransportID net.TransportIdentifier,
 ) (net.UnicastChannel, error) {
@@ -246,10 +224,10 @@ func (b *networkBridge) getUnicastChannelWith(
 
 func (b *networkBridge) sendTSSMessage(
 	ctx context.Context,
-	tssLibMsg tss.Message,
+	tssMsg tss.Message,
 ) {
 
-	bytes, routing, err := tssLibMsg.WireBytes()
+	bytes, routing, err := tssMsg.WireBytes()
 	if err != nil {
 		logger.Errorf("failed to encode message: [%v]", err)
 		return
@@ -268,12 +246,12 @@ func (b *networkBridge) sendTSSMessage(
 	}
 
 	for _, destination := range routing.To {
-		destionationMemberID, err := MemberIDFromString(destination.GetId())
+		destinationMemberID, err := MemberIDFromString(destination.GetId())
 		if err != nil {
 			logger.Errorf("failed to get destination member id: [%v]", err)
 			return
 		}
-		destinationTransportID, err := b.getTransportIdentifier(destionationMemberID)
+		destinationTransportID, err := b.getTransportIdentifier(destinationMemberID)
 		if err != nil {
 			logger.Errorf("failed to get transport identifier: [%v]", err)
 			return
@@ -359,5 +337,26 @@ func (b *networkBridge) handleTssProtocolMessage(protocolMessage *TSSProtocolMes
 		if err := handler(protocolMessage); err != nil {
 			logger.Errorf("failed to handle protocol message: [%v]", err)
 		}
+	}
+}
+
+func createMemberIDFilter(
+	members []MemberID,
+) net.BroadcastChannelFilter {
+
+	authorizations := make(map[string]bool, len(members))
+	for _, member := range members {
+		authorizations[member.String()] = true
+	}
+
+	return func(authorPublicKey *ecdsa.PublicKey) bool {
+		author := MemberIDFromPublicKey(authorPublicKey)
+		_, isAuthorized := authorizations[author.String()]
+
+		if !isAuthorized {
+			logger.Warningf("rejecting message from [%v]; author is not authorized", author)
+		}
+
+		return isAuthorized
 	}
 }

@@ -79,7 +79,7 @@ func (c *channel) Send(ctx context.Context, message net.TaggedMarshaler) error {
 	messageProto.SequenceNumber = c.nextSeqno()
 
 	doSend := func() error {
-		return c.publishToPubSub(messageProto)
+		return c.publishToPubSub(ctx, messageProto)
 	}
 
 	retransmission.ScheduleRetransmissions(ctx, c.retransmissionTicker, doSend)
@@ -171,7 +171,10 @@ func (c *channel) messageProto(
 	}, nil
 }
 
-func (c *channel) publishToPubSub(message *pb.BroadcastNetworkMessage) error {
+func (c *channel) publishToPubSub(
+	ctx context.Context,
+	message *pb.BroadcastNetworkMessage,
+) error {
 	messageBytes, err := message.Marshal()
 	if err != nil {
 		return err
@@ -180,7 +183,11 @@ func (c *channel) publishToPubSub(message *pb.BroadcastNetworkMessage) error {
 	c.pubsubMutex.Lock()
 	defer c.pubsubMutex.Unlock()
 
-	return c.pubsub.Publish(c.name, messageBytes)
+	topic, err := c.pubsub.Join(c.name)
+	if err != nil {
+		return err
+	}
+	return topic.Publish(ctx, messageBytes)
 }
 
 func (c *channel) handleMessage(ctx context.Context) {
