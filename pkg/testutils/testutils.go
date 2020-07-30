@@ -3,11 +3,10 @@
 package testutils
 
 import (
+	crand "crypto/rand"
 	"fmt"
 	"math/big"
 	"testing"
-
-	crand "crypto/rand"
 )
 
 // AssertBytesEqual takes a testing.T and two byte slices and reports an error
