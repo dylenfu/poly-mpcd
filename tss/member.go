@@ -43,9 +43,9 @@ func (id MemberID) Equal(memberID MemberID) bool {
 
 // groupInfo holds information about the group selected for protocol execution.
 type groupInfo struct {
-	groupID            string // globally unique group identifier
-	memberID           MemberID
-	groupMemberIDs     []MemberID
+	groupID        string // globally unique group identifier
+	memberID       MemberID
+	groupMemberIDs []MemberID
 
 	// Dishonest threshold `t` defines a maximum number of signers controlled by the
 	// adversary such that the adversary still cannot produce a signature. Any subset

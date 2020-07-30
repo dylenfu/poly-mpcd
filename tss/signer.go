@@ -36,8 +36,8 @@ func (s *ThresholdSigner) PublicKey() *ecdsa.PublicKey {
 	curve := tsslib.EC()
 	publicKey := ecdsa.PublicKey{
 		Curve: curve,
-		X: pkX,
-		Y: pkY,
+		X:     pkX,
+		Y:     pkY,
 	}
 
 	return (*ecdsa.PublicKey)(&publicKey)
