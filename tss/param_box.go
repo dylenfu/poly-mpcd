@@ -6,7 +6,7 @@ import (
 	"github.com/binance-chain/tss-lib/ecdsa/keygen"
 )
 
-// Box is a container for tss key generation parameters. box lets to
+// ParamBox is a container for tss key generation parameters. box lets to
 // get its connect as well as to destroy it.
 //
 // This type is useful for passing pre-parameters around for retired
@@ -20,17 +20,17 @@ import (
 // box content should be destroyed. until then, it's fine to pass the box
 // around and consume its content for any calculations needed between retried
 // key-generation attempts.
-type Box struct {
+type ParamBox struct {
 	params *keygen.LocalPreParams
 }
 
 // NewBox creates a new PreParamsBox with the provided key generation pre-params
-func NewBox(params *keygen.LocalPreParams) *Box {
-	return &Box{params}
+func NewBox(params *keygen.LocalPreParams) *ParamBox {
+	return &ParamBox{params}
 }
 
 // Content gets the box content or error if the content has been destroyed
-func (b *Box) Content() (*keygen.LocalPreParams, error) {
+func (b *ParamBox) Content() (*keygen.LocalPreParams, error) {
 	if b.IsEmpty() {
 		return nil, fmt.Errorf("box is empty")
 	}
@@ -39,12 +39,12 @@ func (b *Box) Content() (*keygen.LocalPreParams, error) {
 
 // IsEmpty returns true if tht box content has been destroyed.
 // Otherwise, returns false.
-func (b *Box) IsEmpty() bool {
+func (b *ParamBox) IsEmpty() bool {
 	return b.params == nil
 }
 
 // DestroyContent destroys the box content so that all further calls to
 // Content() function will fail
-func (b *Box) DestroyContent() {
+func (b *ParamBox) DestroyContent() {
 	b.params = nil
 }
