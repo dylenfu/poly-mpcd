@@ -26,14 +26,14 @@ func (s *ThresholdSigner) Marshal() ([]byte, error) {
 	}
 
 	group := &pb.ThresholdSigner_GroupInfo{
-		GroupID: s.groupID,
-		MemberID: s.memberID,
-		GroupMemberIDs: groupMemberIDs,
+		GroupID:            s.groupID,
+		MemberID:           s.memberID,
+		GroupMemberIDs:     groupMemberIDs,
 		DishonestThreshold: int32(s.dishonestThreshold),
 	}
 
 	return (&pb.ThresholdSigner{
-		GroupInfo: group,
+		GroupInfo:    group,
 		ThresholdKey: keygenData,
 	}).Marshal()
 }
