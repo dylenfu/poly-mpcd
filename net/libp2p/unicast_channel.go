@@ -17,7 +17,7 @@ import (
 	"github.com/libp2p/go-libp2p-core/peer"
 	"github.com/polynetwork/mpcd/net"
 	"github.com/polynetwork/mpcd/net/key"
-	pb "github.com/polynetwork/mpcd/net/protos/net"
+	pb "github.com/polynetwork/mpcd/protos/net"
 )
 
 const (

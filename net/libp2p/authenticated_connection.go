@@ -11,7 +11,7 @@ import (
 	cusnet "github.com/polynetwork/mpcd/net"
 	"github.com/polynetwork/mpcd/net/handshake"
 	"github.com/polynetwork/mpcd/net/key"
-	pb "github.com/polynetwork/mpcd/net/protos/net"
+	pb "github.com/polynetwork/mpcd/protos/net"
 )
 
 // enough space for a proto-encoded evnvelope with a message, peer ID, and sig.

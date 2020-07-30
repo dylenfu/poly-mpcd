@@ -16,7 +16,7 @@ import (
 	"github.com/polynetwork/mpcd/net"
 	"github.com/polynetwork/mpcd/net/internal"
 	"github.com/polynetwork/mpcd/net/key"
-	pb "github.com/polynetwork/mpcd/net/protos/net"
+	pb "github.com/polynetwork/mpcd/protos/net"
 	"github.com/polynetwork/mpcd/net/retransmission"
 )
 

@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	pb "github.com/polynetwork/mpcd/net/protos/net"
+	pb "github.com/polynetwork/mpcd/protos/net"
 )
 
 const (
