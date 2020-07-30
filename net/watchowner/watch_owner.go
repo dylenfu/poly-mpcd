@@ -110,7 +110,7 @@ func (g *Guard) checkFirewallRules(peer string) {
 }
 
 func (g *Guard) getPeerPublicKey(peer string) (*ecdsa.PublicKey, error) {
-	peerPublicKey, err := g.connectionManager.GetPublicKey(peer)
+	peerPublicKey, err := g.connectionManager.GetPeerPublicKey(peer)
 	if err != nil {
 		return nil, err
 	}
