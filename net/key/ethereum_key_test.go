@@ -5,7 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/polynetwork/mpcd/operator"
-	"github.com/polynetwork/mpcd/pkg/testutils"
+	"github.com/polynetwork/mpcd/pkg/utils/testutils"
 )
 
 // `geth` uses `go-ethereum` library to generate key with secp256k1 curve.

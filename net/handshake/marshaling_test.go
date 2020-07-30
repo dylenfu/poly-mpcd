@@ -6,7 +6,7 @@ import (
 
 	fuzz "github.com/google/gofuzz"
 
-	"github.com/polynetwork/mpcd/pkg/pbutils"
+	"github.com/polynetwork/mpcd/pkg/utils/pbutils"
 )
 
 func TestAct1MessageRoundTrip(t *testing.T) {

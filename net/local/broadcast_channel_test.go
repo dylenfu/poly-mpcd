@@ -10,7 +10,7 @@ import (
 
 	"github.com/polynetwork/mpcd/net"
 	"github.com/polynetwork/mpcd/net/key"
-	"github.com/polynetwork/mpcd/pkg/testutils"
+	"github.com/polynetwork/mpcd/pkg/utils/testutils"
 )
 
 func TestRegisterAndFireHandler(t *testing.T) {

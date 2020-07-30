@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	fuzz "github.com/google/gofuzz"
-	"github.com/polynetwork/mpcd/pkg/pbutils"
+	"github.com/polynetwork/mpcd/pkg/utils/pbutils"
 	"github.com/polynetwork/mpcd/testdata"
 )
 

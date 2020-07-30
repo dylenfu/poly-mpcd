@@ -18,7 +18,7 @@ import (
 	"github.com/polynetwork/mpcd/net/key"
 	"github.com/polynetwork/mpcd/net/local"
 	"github.com/polynetwork/mpcd/operator"
-	"github.com/polynetwork/mpcd/pkg/byteutils"
+	"github.com/polynetwork/mpcd/pkg/utils/byteutils"
 	"github.com/polynetwork/mpcd/testdata"
 )
 
