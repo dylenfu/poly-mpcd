@@ -5,7 +5,7 @@ import (
 
 	libp2pcrypto "github.com/libp2p/go-libp2p-core/crypto"
 	peer "github.com/libp2p/go-libp2p-core/peer"
-	pb "github.com/polynetwork/mpcd/net/protos"
+	pb "github.com/polynetwork/mpcd/net/protos/net"
 )
 
 // identity represents a group of member's network level identity. it

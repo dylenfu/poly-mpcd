@@ -16,7 +16,7 @@ import (
 	cusnet "github.com/polynetwork/mpcd/net"
 	"github.com/polynetwork/mpcd/net/handshake"
 	"github.com/polynetwork/mpcd/net/key"
-	pb "github.com/polynetwork/mpcd/net/protos"
+	pb "github.com/polynetwork/mpcd/net/protos/net"
 )
 
 func TestPinnedAndMessageKeyMismatch(t *testing.T) {
@@ -105,7 +105,7 @@ func maliciousInitiatorHijacksHonestRun(t *testing.T, ac *authenticatedConnectio
 		t.Fatal(err)
 	}
 
-	act3Envelope := &pb.HandshakeEnvelop{
+	act3Envelope := &pb.HandshakeEnvelope{
 		Message:   act3WireMessage,
 		PeerID:    []byte(maliciousInitiator.peerID),
 		Signature: signedAct3Message,

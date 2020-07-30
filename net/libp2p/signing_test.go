@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/polynetwork/mpcd/net/key"
-	pb "github.com/polynetwork/mpcd/net/protos"
+	pb "github.com/polynetwork/mpcd/net/protos/net"
 )
 
 func TestSignAndVerify(t *testing.T) {

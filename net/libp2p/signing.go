@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	libp2pcrypto "github.com/libp2p/go-libp2p-core/crypto"
-	pb "github.com/polynetwork/mpcd/net/protos"
+	pb "github.com/polynetwork/mpcd/net/protos/net"
 )
 
 const signPrefix = "mpcd-unicast:"

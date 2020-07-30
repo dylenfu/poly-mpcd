@@ -3,9 +3,9 @@ syntax = "proto3";
 option go_package = "pb";
 package net;
 
-// HandshakeEnvelop contains a mashalled protocol message, as well as a signature
+// HandshakeEnvelope contains a mashalled protocol message, as well as a signature
 // over the contents of the message(to ensure an advansary hasn't tempared with the content)
-message HandshakeEnvelop {
+message HandshakeEnvelope {
     bytes message = 1;      // the mashalled message
     bytes signature = 2;    // signature of the message
     bytes peerID = 3;       // peer ID of the message creator

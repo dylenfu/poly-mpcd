@@ -11,7 +11,7 @@ import (
 	cusnet "github.com/polynetwork/mpcd/net"
 	"github.com/polynetwork/mpcd/net/handshake"
 	"github.com/polynetwork/mpcd/net/key"
-	pb "github.com/polynetwork/mpcd/net/protos"
+	pb "github.com/polynetwork/mpcd/net/protos/net"
 )
 
 // enough space for a proto-encoded evnvelope with a message, peer ID, and sig.
@@ -217,20 +217,20 @@ func (ac *authenticatedConnection) initiatorSendAct1(
 		return err
 	}
 
-	act1Envelop := &pb.HandshakeEnvelop{
+	act1Envelop1 := &pb.HandshakeEnvelope{
 		Message:   act1WireMessage,
 		Signature: signedAct1Message,
 		PeerID:    []byte(ac.localPeerID),
 	}
 
-	if err := initiatorConnectionWriter.WriteMsg(act1Envelop); err != nil {
+	if err := initiatorConnectionWriter.WriteMsg(act1Envelop1); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// initiatorReceiveAct2 unmarshal a pb.HandshakeEnvelop from a responder,
+// initiatorReceiveAct2 unmarshal a pb.HandshakeEnvelope from a responder,
 // verifies that the signed message matches the expected peer.ID, and returns
 // the handshake.Act2Message for processing by the initiator.
 func (ac *authenticatedConnection) initiatorReceiveAct2(
@@ -238,24 +238,24 @@ func (ac *authenticatedConnection) initiatorReceiveAct2(
 ) (*handshake.Act2Message, error) {
 
 	var (
-		act2Envelop pb.HandshakeEnvelop
-		act2Message = &handshake.Act2Message{}
+		act2Envelope pb.HandshakeEnvelope
+		act2Message  = &handshake.Act2Message{}
 	)
 
-	if err := initiatorConnectionReader.ReadMsg(&act2Envelop); err != nil {
+	if err := initiatorConnectionReader.ReadMsg(&act2Envelope); err != nil {
 		return nil, err
 	}
 
 	if err := ac.verify(
 		ac.remotePeerID,
-		peer.ID(act2Envelop.GetPeerID()),
-		act2Envelop.GetMessage(),
-		act2Envelop.GetSignature(),
+		peer.ID(act2Envelope.GetPeerID()),
+		act2Envelope.GetMessage(),
+		act2Envelope.GetSignature(),
 	); err != nil {
 		return nil, err
 	}
 
-	if err := act2Message.Unmarshal(act2Envelop.Message); err != nil {
+	if err := act2Message.Unmarshal(act2Envelope.Message); err != nil {
 		return nil, err
 	}
 
@@ -263,7 +263,7 @@ func (ac *authenticatedConnection) initiatorReceiveAct2(
 }
 
 // initiatorSendAct3 signs a marshaled *handshake.Act3Message, prepares the
-// message in a pb.handshakeEnvelop, and sends the message to the responder
+// message in a pb.handshakeEnvelope, and sends the message to the responder
 // (over the open connection) from the initiator.
 func (ac *authenticatedConnection) initiatorSendAct3(
 	act3WireMessage []byte,
@@ -274,7 +274,7 @@ func (ac *authenticatedConnection) initiatorSendAct3(
 		return err
 	}
 
-	act3Envelop := &pb.HandshakeEnvelop{
+	act3Envelop := &pb.HandshakeEnvelope{
 		Message:   act3WireMessage,
 		PeerID:    []byte(ac.localPeerID),
 		Signature: signedAct3Message,
@@ -287,7 +287,7 @@ func (ac *authenticatedConnection) initiatorSendAct3(
 	return nil
 }
 
-// responderReceiveAct1 unmarshal a pb.HandshakeEnvelop from an initiator,
+// responderReceiveAct1 unmarshal a pb.HandshakeEnvelope from an initiator,
 // verifies that the signed messages matches by the expected peer.ID, and returns
 // the handshake.Act1Message for processing by the responder.
 func (ac *authenticatedConnection) responderReceiveAct1(
@@ -295,11 +295,11 @@ func (ac *authenticatedConnection) responderReceiveAct1(
 ) (*handshake.Act1Message, error) {
 
 	var (
-		act1Envelop pb.HandshakeEnvelop
-		act1Message = &handshake.Act1Message{}
+		act1Envelope pb.HandshakeEnvelope
+		act1Message  = &handshake.Act1Message{}
 	)
 
-	if err := responderConnectionReader.ReadMsg(&act1Envelop); err != nil {
+	if err := responderConnectionReader.ReadMsg(&act1Envelope); err != nil {
 		return nil, err
 	}
 
@@ -307,7 +307,7 @@ func (ac *authenticatedConnection) responderReceiveAct1(
 	// during the handshake, we overcome this limitation by sending the identity
 	// and public key in the envelop. in the first act of handshake, the
 	// responder extracts this information
-	ac.remotePeerID = peer.ID(act1Envelop.GetPeerID())
+	ac.remotePeerID = peer.ID(act1Envelope.GetPeerID())
 	remotePublicKey, err := ac.remotePeerID.ExtractPublicKey()
 	if err != nil {
 		return nil, err
@@ -316,13 +316,13 @@ func (ac *authenticatedConnection) responderReceiveAct1(
 
 	if err := ac.verify(
 		ac.remotePeerID,
-		peer.ID(act1Envelop.GetPeerID()),
-		act1Envelop.GetMessage(),
-		act1Envelop.GetSignature()); err != nil {
+		peer.ID(act1Envelope.GetPeerID()),
+		act1Envelope.GetMessage(),
+		act1Envelope.GetSignature()); err != nil {
 		return nil, err
 	}
 
-	if err := act1Message.Unmarshal(act1Envelop.Message); err != nil {
+	if err := act1Message.Unmarshal(act1Envelope.Message); err != nil {
 		return nil, err
 	}
 
@@ -330,7 +330,7 @@ func (ac *authenticatedConnection) responderReceiveAct1(
 }
 
 // responderSendAct2 signs a marshaled *handshake.Act2Message, prepares
-// the message in a pb.HandshakeEnvelop, and sends the message to the
+// the message in a pb.HandshakeEnvelope, and sends the message to the
 // initiator(over the open connection) from the responder.
 func (ac *authenticatedConnection) responderSendAct2(
 	act2WireMessage []byte,
@@ -342,13 +342,13 @@ func (ac *authenticatedConnection) responderSendAct2(
 		return err
 	}
 
-	act2Envelop := &pb.HandshakeEnvelop{
+	act2Envelope := &pb.HandshakeEnvelope{
 		Message:   act2WireMessage,
 		PeerID:    []byte(ac.localPeerID),
 		Signature: signedAct2Message,
 	}
 
-	if err := responderConnectionWriter.WriteMsg(act2Envelop); err != nil {
+	if err := responderConnectionWriter.WriteMsg(act2Envelope); err != nil {
 		return err
 	}
 
@@ -363,24 +363,24 @@ func (ac *authenticatedConnection) responderReceiveAct3(
 ) (*handshake.Act3Message, error) {
 
 	var (
-		act3Envelop pb.HandshakeEnvelop
-		act3Message = &handshake.Act3Message{}
+		act3Envelope pb.HandshakeEnvelope
+		act3Message  = &handshake.Act3Message{}
 	)
 
-	if err := responderConnectionReader.ReadMsg(&act3Envelop); err != nil {
+	if err := responderConnectionReader.ReadMsg(&act3Envelope); err != nil {
 		return nil, err
 	}
 
 	if err := ac.verify(
 		ac.remotePeerID,
-		peer.ID(act3Envelop.GetPeerID()),
-		act3Envelop.GetMessage(),
-		act3Envelop.GetSignature(),
+		peer.ID(act3Envelope.GetPeerID()),
+		act3Envelope.GetMessage(),
+		act3Envelope.GetSignature(),
 	); err != nil {
 		return nil, err
 	}
 
-	if err := act3Message.Unmarshal(act3Envelop.Message); err != nil {
+	if err := act3Message.Unmarshal(act3Envelope.Message); err != nil {
 		return nil, err
 	}
 	return act3Message, nil
