@@ -26,6 +26,7 @@ require (
 	github.com/libp2p/go-libp2p-secio v0.2.1
 	github.com/multiformats/go-multiaddr v0.2.0
 	github.com/pborman/uuid v1.2.0
+	github.com/pkg/errors v0.9.1
 	github.com/urfave/cli v1.22.1
 	github.com/yuin/goldmark v1.2.0 // indirect
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899
